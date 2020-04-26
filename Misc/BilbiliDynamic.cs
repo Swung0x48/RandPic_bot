@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using RandPic_bot.IO;
@@ -7,8 +8,9 @@ namespace RandPic_bot.Misc
 {
     public class BilbiliDynamic
     {
-        public static async Task<string> Poll(string uid)
+        public static async Task<string> Poll(int index)
         {
+            string uid = Vars.CurrentConf.BilibiliUid[index];
             try
             {
                 string rawDynamic = await Networking.MakeHttpRequestAsync(
@@ -21,21 +23,29 @@ namespace RandPic_bot.Misc
                 
                 
                 var dynamicObj = JObject.Parse(rawDynamic);
-                var firstCard = dynamicObj["data"]?["cards"]?[4];
+                var firstCard = dynamicObj["data"]?["cards"]?[0];
 
                 var type = firstCard?["desc"]?["type"];
                 Console.WriteLine(type);                                                    // get content type
 
                 var dynamicId = firstCard?["desc"]?["dynamic_id_str"]?.ToString();
                 var link = $"https://t.bilibili.com/{dynamicId}";
-                var timestamp = firstCard?["desc"]?["timestamp"];
+                var timestamp = firstCard?["desc"]?["timestamp"]?.ToString();
                 var userProfile = firstCard?["desc"]?["user_profile"]?["info"];
                 var username = userProfile?["uname"];
                 string rawFirstCardStr = firstCard?["card"]?.ToString();
                 var firstCardObj = JObject.Parse(rawFirstCardStr ?? "");
 
-                
-                
+                if (timestamp != Vars.CurrentConf.LastTimeStamp[index])
+                {
+                    Vars.CurrentConf.LastTimeStamp[index] = timestamp;
+                    await IO.File.WriteConf(Vars.ConfFile, Vars.CurrentConf);
+                }
+                else
+                {
+                    return "";
+                }
+
                 if (type?.ToString() == "1")
                 {
 
@@ -46,7 +56,7 @@ namespace RandPic_bot.Misc
                     content = Chop(content);
 
                     var rawOrigin = JObject.Parse(firstCardObj["origin"]?.ToString() ?? "");
-                    Console.WriteLine(rawOrigin);
+                    //Console.WriteLine(rawOrigin);
                     var forwardedText = rawOrigin["item"]?["description"]?.ToString();
 
                     forwardedText = Chop(forwardedText);
@@ -57,7 +67,7 @@ namespace RandPic_bot.Misc
                         $"{content}\n" +
                         $"↪️\n" +
                         $"[{forwardedText}]";
-                    Console.WriteLine(output);
+                    // Console.WriteLine(output);
                     return output;
                 }
                 else if (type?.ToString() == "2")
@@ -73,12 +83,12 @@ namespace RandPic_bot.Misc
                         $"{link}\n" +
                         $"{username} 发布了一条动态：\n" +
                         $"{description}\n";
-                    Console.WriteLine(output);
+                    // Console.WriteLine(output);
                     return output;
                 }
                 else if (type?.ToString() == "4")
                 {
-                    Console.WriteLine(firstCardObj);
+                    //Console.WriteLine(firstCardObj);
                     var content = firstCardObj["item"]?["content"]?.ToString();
                     content = Chop(content);
                     
@@ -87,7 +97,7 @@ namespace RandPic_bot.Misc
                         $"{username} 发布了一条动态：\n" +
                         $"{content}";
                     
-                    Console.WriteLine(output);
+                    // Console.WriteLine(output);
                     return output;
                 }
                 else if (type?.ToString() == "8")
@@ -107,7 +117,7 @@ namespace RandPic_bot.Misc
                         $"{description}\n" +
                         $"🎬{videoLink}\n";
                         
-                    Console.WriteLine(output);
+                    // Console.WriteLine(output);
                     return output;
                 }
                 else if (type?.ToString() == "64")
@@ -127,7 +137,7 @@ namespace RandPic_bot.Misc
                         $"↪️\n" +
                         $"[{readLink}\n" +
                         $"{summary}]";
-                    Console.WriteLine(output);
+                    // Console.WriteLine(output);
                     return output;
                 }
                 else if (type?.ToString() == "2048")
@@ -140,8 +150,10 @@ namespace RandPic_bot.Misc
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                return Chop(e.ToString());
             }
+
+            return "";
         }
         
         public static string Chop(string input)
