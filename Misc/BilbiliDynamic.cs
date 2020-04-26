@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml;
 using Newtonsoft.Json.Linq;
 using RandPic_bot.IO;
 
@@ -48,97 +49,153 @@ namespace RandPic_bot.Misc
 
                 if (type?.ToString() == "1")
                 {
+                    try
+                    {
 
-                    //Console.WriteLine(firstCardObj);
-                    //var username = firstCardObj["user"]?["uname"]?.ToString();
-                    var content = firstCardObj["item"]?["content"]?.ToString();
 
-                    content = Chop(content);
+                        //Console.WriteLine(firstCardObj);
+                        //var username = firstCardObj["user"]?["uname"]?.ToString();
+                        var content = firstCardObj["item"]?["content"]?.ToString();
 
-                    var rawOrigin = JObject.Parse(firstCardObj["origin"]?.ToString() ?? "");
-                    //Console.WriteLine(rawOrigin);
-                    var forwardedText = rawOrigin["item"]?["description"]?.ToString();
+                        content = Chop(content);
 
-                    forwardedText = Chop(forwardedText);
+                        var rawOrigin = JObject.Parse(firstCardObj["origin"]?.ToString() ?? "");
+                        //Console.WriteLine(rawOrigin);
+                        var forwardedText = rawOrigin["item"]?["description"]?.ToString();
 
-                    string output = 
-                        $"{link}\n" +
-                        $"{username} 转发了一条动态：\n" +
-                        $"{content}\n" +
-                        $"↪️\n" +
-                        $"[{forwardedText}]";
-                    // Console.WriteLine(output);
-                    return output;
+                        forwardedText = Chop(forwardedText);            // TODO : Handle other forward origin types.
+
+                        string output =
+                            $"{link}\n" +
+                            $"{username} 转发了一条动态：\n" +
+                            $"{content}\n" +
+                            $"↪️\n" +
+                            $"[{forwardedText}]";
+                        // Console.WriteLine(output);
+                        return output;
+                    }
+                    catch (Exception ex)
+                    {
+                        string output = $"Exception when parsing item: Type 1 (Forward)\n\n" +
+                                        $"{ex}";
+                        
+                        Console.WriteLine(output);
+                        return output;
+                    }
                 }
                 else if (type?.ToString() == "2")
                 {
-                    //Console.WriteLine(firstCardObj);
-                    
-                    //var username = firstCardObj["user"]?["name"]?.ToString();
-                    var description = firstCardObj["item"]?["description"]?.ToString();
+                    try
+                    {
+                        //Console.WriteLine(firstCardObj);
 
-                    description = Chop(description);
+                        //var username = firstCardObj["user"]?["name"]?.ToString();
+                        var description = firstCardObj["item"]?["description"]?.ToString();
 
-                    string output =
-                        $"{link}\n" +
-                        $"{username} 发布了一条动态：\n" +
-                        $"{description}\n";
-                    // Console.WriteLine(output);
-                    return output;
+                        description = Chop(description);
+
+                        string output =
+                            $"{link}\n" +
+                            $"{username} 发布了一条动态：\n" +
+                            $"{description}\n";
+                        // Console.WriteLine(output);
+                        return output;
+                    }
+                    catch (Exception ex)
+                    {
+                        string output = $"Exception when parsing item: Type 2 (Album)\n\n" +
+                                        $"{ex}";
+                        
+                        Console.WriteLine(output);
+                        return output;
+                    }
                 }
                 else if (type?.ToString() == "4")
                 {
-                    //Console.WriteLine(firstCardObj);
-                    var content = firstCardObj["item"]?["content"]?.ToString();
-                    content = Chop(content);
-                    
-                    string output =
-                        $"{link}\n" +
-                        $"{username} 发布了一条动态：\n" +
-                        $"{content}";
-                    
-                    // Console.WriteLine(output);
-                    return output;
+                    try
+                    {
+                        //Console.WriteLine(firstCardObj);
+                        var content = firstCardObj["item"]?["content"]?.ToString();
+                        content = Chop(content);
+
+                        string output =
+                            $"{link}\n" +
+                            $"{username} 发布了一条动态：\n" +
+                            $"{content}";
+
+                        // Console.WriteLine(output);
+                        return output;
+                    }
+                    catch (Exception ex)
+                    {
+                        string output = $"Exception when parsing item: Type 4 (TextDynamic)\n\n" +
+                                        $"{ex}";
+                        
+                        Console.WriteLine(output);
+                        return output;
+                    }
                 }
                 else if (type?.ToString() == "8")
                 {
-                    //Console.WriteLine(firstCardObj);
-                    //var username = "";
+                    try
+                    {
+                        //Console.WriteLine(firstCardObj);
+                        //var username = "";
 
-                    var bvid = firstCard["desc"]?["bvid"]?.ToString();
-                    var videoLink = $"https://www.bilibili.com/video/{bvid}";
+                        var bvid = firstCard["desc"]?["bvid"]?.ToString();
+                        var videoLink = $"https://www.bilibili.com/video/{bvid}";
 
-                    var description = firstCardObj["desc"]?.ToString();
-                    description = Chop(description);
-                    
-                    string output =
-                        $"{link}\n" +
-                        $"{username} 投稿了一个视频：\n" +
-                        $"{description}\n" +
-                        $"🎬{videoLink}\n";
+                        var description = firstCardObj["desc"]?.ToString();
+                        description = Chop(description);
+
+                        string output =
+                            $"{link}\n" +
+                            $"{username} 投稿了一个视频：\n" +
+                            $"{description}\n" +
+                            $"🎬{videoLink}\n";
+
+                        // Console.WriteLine(output);
+                        return output;
+                    }
+                    catch (Exception ex)
+                    {
+                        string output = $"Exception when parsing item: Type 8 (Video)\n\n" +
+                                        $"{ex}";
                         
-                    // Console.WriteLine(output);
-                    return output;
+                        Console.WriteLine(output);
+                        return output;
+                    }
                 }
                 else if (type?.ToString() == "64")
                 {
-                    var rid = firstCard["desc"]?["rid"]?.ToString();
-                    var readLink = $"https://www.bilibili.com/read/cv{rid}";
-                    //Console.WriteLine(firstCardObj);
-                    var content = firstCardObj["dynamic"]?.ToString();
-                    var summary = firstCardObj["summary"]?.ToString();
-                    content = Chop(content);
-                    summary = Chop(summary);
+                    try
+                    {
+                        var rid = firstCard["desc"]?["rid"]?.ToString();
+                        var readLink = $"https://www.bilibili.com/read/cv{rid}";
+                        //Console.WriteLine(firstCardObj);
+                        var content = firstCardObj["dynamic"]?.ToString();
+                        var summary = firstCardObj["summary"]?.ToString();
+                        content = Chop(content);
+                        summary = Chop(summary);
+
+                        string output =
+                            $"{link}\n" +
+                            $"{username} 投稿了一篇专栏文章：\n" +
+                            $"{content}\n" +
+                            $"↪️\n" +
+                            $"[{readLink}\n" +
+                            $"{summary}]";
+                        // Console.WriteLine(output);
+                        return output;
+                    }
+                    catch (Exception ex)
+                    {
+                        string output = $"Exception when parsing item: Type 64 (Article)\n\n" +
+                                        $"{ex}";
                         
-                    string output =
-                        $"{link}\n" +
-                        $"{username} 投稿了一篇专栏文章：\n" +
-                        $"{content}\n" +
-                        $"↪️\n" +
-                        $"[{readLink}\n" +
-                        $"{summary}]";
-                    // Console.WriteLine(output);
-                    return output;
+                        Console.WriteLine(output);
+                        return output;
+                    }
                 }
                 else if (type?.ToString() == "2048")
                 {
