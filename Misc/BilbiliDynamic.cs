@@ -49,17 +49,30 @@ namespace RandPic_bot.Misc
                 {
                     try
                     {
-
-
                         //Console.WriteLine(firstCardObj);
                         //var username = firstCardObj["user"]?["uname"]?.ToString();
                         var content = firstCardObj["item"]?["content"]?.ToString();
-
+                        var orig_type = firstCardObj["item"]?["orig_type"]?.ToString();
+                        Console.WriteLine(orig_type);
+                        
                         content = Chop(content);
 
                         var rawOrigin = JObject.Parse(firstCardObj["origin"]?.ToString() ?? "");
-                        //Console.WriteLine(rawOrigin);
+                        Console.WriteLine(rawOrigin);
                         var forwardedText = rawOrigin["item"]?["description"]?.ToString();
+                        var metaString = "\n";
+
+                        if (orig_type == "8")
+                        {
+                            forwardedText += rawOrigin["dynamic"]?.ToString();
+                            var aid = rawOrigin["aid"]?.ToString();            // av number.
+                            var vidTitle = rawOrigin["title"]?.ToString();
+                            var uperName = rawOrigin["owner"]?["name"]?.ToString();
+                            metaString += $"\n🎬 {uperName} 的投稿视频\n" +
+                                             $"{vidTitle}\n" +
+                                             $"https://www.bilibili.com/video/av{aid}";
+                        }
+
 
                         forwardedText = Chop(forwardedText);            // TODO : Handle other forward origin types.
 
@@ -68,8 +81,10 @@ namespace RandPic_bot.Misc
                             $"{username} 转发了一条动态：\n" +
                             $"{content}\n" +
                             $"↪️\n" +
-                            $"[{forwardedText}]";
+                            $"[{forwardedText}" +
+                            $"{metaString}]";
                         // Console.WriteLine(output);
+                        Console.WriteLine(output);
                         return output;
                     }
                     catch (Exception ex)
