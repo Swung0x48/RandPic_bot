@@ -56,30 +56,28 @@ namespace RandPic_bot {
             }
             await IO.File.WriteConf(Vars.ConfFile, Vars.CurrentConf);
             
+            try
+            {
+                await BotInstance.CqHttpClient.SendTextAsync(
+                    MessageType.private_,
+                    Vars.CurrentConf.OwnerQqNumber,
+                    "Started"
+                );
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
             
-            
-            // try
-            // {
-            //     await BotInstance.CqHttpClient.SendTextAsync(
-            //         MessageType.private_,
-            //         Vars.CurrentConf.OwnerQqNumber,
-            //         "Started"
-            //     );
-            // }
-            // catch(Exception e)
-            // {
-            //     Console.WriteLine(e);
-            // }
-            //
-            // BotInstance.CqHttpClient.OnEventAsync += async (client, e) => 
-            // {
-            //     Console.Write("Rcvd msg: ");
-            //     if (e is GroupMessageEvent me)
-            //     {
-            //         Console.WriteLine(me.message);
-            //     }
-            //     return new EmptyResponse();
-            // };
+            BotInstance.CqHttpClient.OnEventAsync += async (client, e) => 
+            {
+                Console.Write("Rcvd msg: ");
+                if (e is GroupMessageEvent me)
+                {
+                    Console.WriteLine(me.message);
+                }
+                return new EmptyResponse();
+            };
             
             var cts = new CancellationToken();
             var interval = TimeSpan.FromSeconds(Vars.CurrentConf.Interval);
@@ -90,13 +88,7 @@ namespace RandPic_bot {
                 interval,
                 cts);
             
-            
-            
-            
             Console.ReadLine();
         }
-
-        
-            
     }
 }

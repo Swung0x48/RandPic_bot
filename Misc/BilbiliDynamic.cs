@@ -20,14 +20,12 @@ namespace RandPic_bot.Misc
                     $"&offset_dynamic_id=0" +
                     $"&page=0"
                 );
-
-                
                 
                 var dynamicObj = JObject.Parse(rawDynamic);
                 var firstCard = dynamicObj["data"]?["cards"]?[0];
 
                 var type = firstCard?["desc"]?["type"];
-                Console.WriteLine(type);                                                    // get content type
+                Console.WriteLine($"{type} from {uid}");                                                    // get content type
 
                 var dynamicId = firstCard?["desc"]?["dynamic_id_str"]?.ToString();
                 var link = $"https://t.bilibili.com/{dynamicId}";
@@ -97,7 +95,7 @@ namespace RandPic_bot.Misc
                         string output =
                             $"{link}\n" +
                             $"{username} 发布了一条动态：\n" +
-                            $"{description}\n";
+                            $"{description}";
                         // Console.WriteLine(output);
                         return output;
                     }
@@ -152,7 +150,7 @@ namespace RandPic_bot.Misc
                             $"{link}\n" +
                             $"{username} 投稿了一个视频：\n" +
                             $"{description}\n" +
-                            $"🎬{videoLink}\n";
+                            $"🎬{videoLink}";
 
                         // Console.WriteLine(output);
                         return output;
@@ -182,9 +180,8 @@ namespace RandPic_bot.Misc
                             $"{link}\n" +
                             $"{username} 投稿了一篇专栏文章：\n" +
                             $"{content}\n" +
-                            $"↪️\n" +
-                            $"[{readLink}\n" +
-                            $"{summary}]";
+                            $"↪️{readLink}\n" +
+                            $"[{summary}]";
                         // Console.WriteLine(output);
                         return output;
                     }
