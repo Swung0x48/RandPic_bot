@@ -16,8 +16,5 @@ namespace RandPic_bot.Misc
         public List<string> LastTimeStamp = new List<string>();
         public long QqGroupId;
         public int Interval;
-
-
-
     }
 }

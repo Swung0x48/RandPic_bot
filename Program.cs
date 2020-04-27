@@ -13,9 +13,7 @@ using static RandPic_bot.Misc.BilbiliDynamic;
 using Timer = RandPic_bot.Misc.Timer;
 
 namespace RandPic_bot {
-    
     public class Program {
-        
         static async Task Main(string[] args)
         {
             Vars.Stopwatch.Start();                                                // Start stopwatch to record uptime.

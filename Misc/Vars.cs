@@ -10,10 +10,7 @@ namespace RandPic_bot.Misc
     public class Vars
     {
         public static Stopwatch Stopwatch = new Stopwatch();
-
         
-        
-
         public readonly static string AppExecutable = 
             Assembly.GetExecutingAssembly().Location;
         public readonly static string AppDirectory = 
@@ -26,7 +23,5 @@ namespace RandPic_bot.Misc
         public static Config CurrentConf = new Config();
 
         public static string Uptime => Stopwatch.Elapsed.ToString();
-        
-        
     }
 }
