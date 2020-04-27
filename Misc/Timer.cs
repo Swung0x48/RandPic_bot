@@ -13,16 +13,13 @@ namespace RandPic_bot.Misc
         {
             _interval = interval;
         }
-
-
+        
         public async Task<bool> Start(List<string> uid, TimeSpan timeSpan, CancellationToken cts)
         {
-
             await Task.Run(async () =>
             {
                 while (true)
                 {
-                    
                     foreach (var i in uid)
                     {
                         string msgToSend = await BilbiliDynamic.Poll(uid.IndexOf(i));
@@ -41,7 +38,6 @@ namespace RandPic_bot.Misc
                         {
                             Console.WriteLine($"{Vars.Uptime}:\n No updates. Skipping.");
                         }
-
                         
                         await Task.Delay(timeSpan / uid.Count, cts);
                         if (cts.IsCancellationRequested)

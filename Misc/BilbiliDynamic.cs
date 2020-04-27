@@ -72,8 +72,7 @@ namespace RandPic_bot.Misc
                                              $"{vidTitle}\n" +
                                              $"https://www.bilibili.com/video/av{aid}";
                         }
-
-
+                        
                         forwardedText = Chop(forwardedText);            // TODO : Handle other forward origin types.
 
                         string output =

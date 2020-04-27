@@ -39,7 +39,6 @@ namespace RandPic_bot.IO
                         Encoding.UTF8
                     )
                 );
-
             }
             catch (Exception e)
             {

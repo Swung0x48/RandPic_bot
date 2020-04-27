@@ -12,7 +12,6 @@ using RandPic_bot.Misc;
 using static RandPic_bot.Misc.BilbiliDynamic;
 using Timer = RandPic_bot.Misc.Timer;
 
-
 namespace RandPic_bot {
     
     public class Program {
