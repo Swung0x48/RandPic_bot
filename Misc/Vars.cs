@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Timers;
 using cqhttp.Cyan.Clients;
 
-namespace RandPic_bot.Misc
+namespace BilibiliForwarder_bot.Misc
 {
     public class Vars
     {

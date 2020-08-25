@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using cqhttp.Cyan.Enums;
 
-namespace RandPic_bot.Misc
+namespace BilibiliForwarder_bot.Misc
 {
     public class Timer
     {

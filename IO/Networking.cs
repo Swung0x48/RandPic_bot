@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace RandPic_bot.IO
+namespace BilibiliForwarder_bot.IO
 {
     public class Networking
     {

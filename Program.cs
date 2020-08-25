@@ -4,15 +4,15 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using BilibiliForwarder_bot.Misc;
 using cqhttp.Cyan.Clients;
 using cqhttp.Cyan.Enums;
 using cqhttp.Cyan.Events.CQEvents;
 using cqhttp.Cyan.Events.CQResponses;
-using RandPic_bot.Misc;
-using static RandPic_bot.Misc.BilbiliDynamic;
-using Timer = RandPic_bot.Misc.Timer;
+using static BilibiliForwarder_bot.Misc.BilbiliDynamic;
+using Timer = BilibiliForwarder_bot.Misc.Timer;
 
-namespace RandPic_bot {
+namespace BilibiliForwarder_bot {
     public class Program {
         static async Task Main(string[] args)
         {
@@ -79,7 +79,7 @@ namespace RandPic_bot {
             var cts = new CancellationToken();
             var interval = TimeSpan.FromSeconds(Vars.CurrentConf.Interval);
             
-            Timer timer = new Timer(interval);
+            Misc.Timer timer = new Misc.Timer(interval);
             await timer.Start(
                 Vars.CurrentConf.BilibiliUid,
                 interval,

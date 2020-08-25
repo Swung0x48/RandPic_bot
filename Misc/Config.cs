@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RandPic_bot.Misc
+namespace BilibiliForwarder_bot.Misc
 {
     public class Config
     {

@@ -1,10 +1,10 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using BilibiliForwarder_bot.Misc;
 using Newtonsoft.Json;
-using RandPic_bot.Misc;
 
-namespace RandPic_bot.IO
+namespace BilibiliForwarder_bot.IO
 {
     public class File
     {

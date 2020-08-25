@@ -1,26 +1,38 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using System.Xml;
+using BilibiliForwarder_bot.IO;
 using Newtonsoft.Json.Linq;
-using RandPic_bot.IO;
 
-namespace RandPic_bot.Misc
+namespace BilibiliForwarder_bot.Misc
 {
     public class BilbiliDynamic
     {
         public static async Task<string> Poll(int index)
         {
             string uid = Vars.CurrentConf.BilibiliUid[index];
+
+            string rawDynamic = "";
+
             try
             {
-                string rawDynamic = await Networking.MakeHttpRequestAsync(
+                rawDynamic = await Networking.MakeHttpRequestAsync(
                     $"https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history" +
                     $"?host_uid={uid}" +
                     $"&offset_dynamic_id=0" +
                     $"&page=0"
                 );
-                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return e.ToString();
+            }
+
+            try
+            {
                 var dynamicObj = JObject.Parse(rawDynamic);
                 var firstCard = dynamicObj["data"]?["cards"]?[0];
 
@@ -52,8 +64,8 @@ namespace RandPic_bot.Misc
                         //Console.WriteLine(firstCardObj);
                         //var username = firstCardObj["user"]?["uname"]?.ToString();
                         var content = firstCardObj["item"]?["content"]?.ToString();
-                        var orig_type = firstCardObj["item"]?["orig_type"]?.ToString();
-                        Console.WriteLine(orig_type);
+                        var origType = firstCardObj["item"]?["orig_type"]?.ToString();
+                        Console.WriteLine(origType);
                         
                         content = Chop(content);
 
@@ -62,13 +74,13 @@ namespace RandPic_bot.Misc
                         var forwardedText = rawOrigin["item"]?["description"]?.ToString();
                         var metaString = "\n";
 
-                        if (orig_type == "8")
+                        if (origType == "8")
                         {
                             forwardedText += rawOrigin["dynamic"]?.ToString();
                             var aid = rawOrigin["aid"]?.ToString();            // av number.
                             var vidTitle = rawOrigin["title"]?.ToString();
                             var uperName = rawOrigin["owner"]?["name"]?.ToString();
-                            metaString += $"\n🎬 {uperName} 的投稿视频\n" +
+                            metaString += $"🎬 {uperName} 的投稿视频\n" +
                                              $"{vidTitle}\n" +
                                              $"https://www.bilibili.com/video/av{aid}";
                         }
@@ -217,8 +229,11 @@ namespace RandPic_bot.Misc
             }
             catch (Exception e)
             {
+                Console.WriteLine("Untreated exception:");
+                Console.WriteLine("StackTrace:");
                 Console.WriteLine(e);
-                return Chop(e.ToString());
+                Console.WriteLine("Raw Json: \n" + rawDynamic);
+                return $"StackTrace: \n{e}\nRaw Json: {rawDynamic}";
             }
 
             return "";

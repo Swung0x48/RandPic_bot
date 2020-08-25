@@ -1,7 +1,7 @@
+using BilibiliForwarder_bot.Misc;
 using cqhttp.Cyan.Clients;
-using RandPic_bot.Misc;
 
-namespace RandPic_bot
+namespace BilibiliForwarder_bot
 {
     public class BotInstance
     {
